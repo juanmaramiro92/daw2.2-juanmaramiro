@@ -11,6 +11,7 @@ if ($nuevaEntrada) {
     $personaNombre = "";
     $personaApellido = "";
     $personaTelefono = "";
+    $personaEstrella = false;
     $personaCategoriaId = 0;
 } else {
     $sqlPersona = "SELECT * FROM persona WHERE id=?";
@@ -20,13 +21,14 @@ if ($nuevaEntrada) {
     $rsPersona = $select->fetchAll();
 
     $personaNombre = $rsPersona[0]["nombre"];
-    $personaApellido = $rsPersona[0]["apellido"];
+    $personaApellido = $rsPersona[0]["apellidos"];
     $personaTelefono = $rsPersona[0]["telefono"];
-    $personaCategoriaId = $rsPersona[0]["categoria_id"];
+    $personaEstrella = ($rsPersona[0]["estrella"] == 1);
+    $personaCategoriaId = $rsPersona[0]["categoriaId"];
 
 }
 
-$sqlCategoria = "SELECT id, nombre FROM categoria ORDER BY nombre";
+$sqlCategoria = "SELECT * FROM categoria ORDER BY nombre";
 $select = $conexion->prepare($sqlCategoria);
 $select->execute([]);
 $rsCategoria = $select->fetchAll();
@@ -58,8 +60,8 @@ $rsCategoria = $select->fetchAll();
     <label for='nombre'>Nombre: </label>
     <input type='text' name='nombre' value='<?=$personaNombre?>' /><br>
 
-    <label for='apellido'> Apellido: </label>
-    <input type='text' name='apellido' value='<?=$personaApellido?>' /><br>
+    <label for='apellidos'> Apellidos: </label>
+    <input type='text' name='apellidos' value='<?=$personaApellido?>' /><br>
 
     <label for='telefono'> Teléfono: </label>
     <input type='text' name='telefono' value='<?=$personaTelefono?>' /><br>
@@ -81,7 +83,10 @@ $rsCategoria = $select->fetchAll();
                 }
             }
             ?>
-        </select><br><br>
+        </select><br>
+
+    <label for='estrella'>Favorito: </label>
+    <input type='checkbox' name='estrella' <?= $personaEstrella ? "checked" : "" ?> /><br><br>
 
     <?php if ($nuevaEntrada) { ?>
         <input type='submit' name='crear' value='Crear persona' />

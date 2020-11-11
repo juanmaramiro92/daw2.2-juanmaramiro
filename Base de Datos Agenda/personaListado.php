@@ -3,7 +3,9 @@ require_once "_varios.php";
 
 $conexionBD = obtenerPdoConexionBD();
 
-$sql = "SELECT p.id, p.nombre, p.apellido, p.telefono, c.id AS cId, c.nombre AS cNombre FROM persona p INNER JOIN categoria c ON p.categoria_id = c.id ORDER BY p.nombre";
+$sql = "SELECT p.id AS pId, p.nombre AS pNombre, p.apellidos AS pApellidos, p.telefono AS pTelefono, p.estrella AS pEstrella, c.id AS cId, c.nombre AS cNombre 
+        FROM persona AS p INNER JOIN categoria AS c ON p.categoriaId = c.id
+        ORDER BY p.nombre";
 
 $select = $conexionBD->prepare($sql);
 $select->execute([]);
@@ -32,15 +34,27 @@ $rs = $select->fetchAll();
         <th>Apellido</th>
         <th>Teléfono</th>
         <th>Categoria</th>
+        <th>Favorito</th>
+        <th>Borrar</th>
     </tr>
 
     <?php foreach ($rs as $fila) { ?>
         <tr>
-            <td><a href='personaFicha.php?id=<?=$fila["id"]?>'><?=$fila["nombre"] ?></a></td>
-            <td><a href='personaFicha.php?id=<?=$fila["id"]?>'><?=$fila["apellido"] ?></a></td>
-            <td><a href='personaFicha.php?id=<?=$fila["id"]?>'><?=$fila["telefono"] ?></a></td>
-            <td><a href='categoriaFicha.php?id=<?=$fila["cId"]?>'><?=$fila["cNombre"] ?></a></td>
-            <td><a href='personaEliminar.php?id=<?=$fila["id"]?>'> (X) </a></td>
+            <td style='text-align: center'><a href='personaFicha.php?id=<?=$fila["pId"]?>'><?=$fila["pNombre"] ?></a></td>
+            <td style='text-align: center'><a href='personaFicha.php?id=<?=$fila["pId"]?>'><?=$fila["pApellidos"] ?></a></td>
+            <td style='text-align: center'><a href='personaFicha.php?id=<?=$fila["pId"]?>'><?=$fila["pTelefono"] ?></a></td>
+            <td style='text-align: center'><a href='categoriaFicha.php?id=<?=$fila["cId"]?>'><?=$fila["cNombre"] ?></a></td>
+            <?php
+            if ($fila["pEstrella"]) {
+                $urlImagen = "img/estrellaRellena.png";
+                $parametroEstrella = "estrella";
+            } else {
+                $urlImagen = "img/estrellaVacia.png";
+                $parametroEstrella = "";
+            }
+            echo " <td style='text-align: center'><a href='personaEstablecerEstadoEstrella.php?$parametroEstrella'><img src='$urlImagen' width='16' height='16'></a></td>";
+            ?>
+            <td style='text-align: center'><a href='personaEliminar.php?id=<?=$fila["pId"]?>'> (X) </a></td>
         </tr>
     <?php } ?>
 

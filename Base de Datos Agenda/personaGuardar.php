@@ -5,18 +5,19 @@ $conexionBD = obtenerPdoConexionBD();
 
 $id = (int)$_REQUEST["id"];
 $nombre = $_REQUEST["nombre"];
-$apellido = $_REQUEST["apellido"];
+$apellido = $_REQUEST["apellidos"];
 $telefono = $_REQUEST["telefono"];
 $categoriaId = (int)$_REQUEST["categoriaId"];
+$estrella = isset($_REQUEST["estrella"]);
 
 $nuevaEntrada = ($id == -1);
 
 if ($nuevaEntrada) {
-    $sql = "INSERT INTO persona (nombre, apellido, telefono, categoria_id) VALUES (?, ?, ?, ?)";
-    $parametros = [$nombre, $apellido, $telefono, $categoriaId];
+    $sql = "INSERT INTO persona (nombre, apellidos, telefono, estrella, categoriaId) VALUES (?, ?, ?, ?, ?)";
+    $parametros = [$nombre, $apellido, $telefono, $estrella?1:0, $categoriaId];
 } else {
-    $sql = "UPDATE persona SET nombre=?, apellido=?, telefono=?, categoria_id=? WHERE id=?";
-    $parametros = [$nombre, $apellido, $telefono, $categoriaId, $id];
+    $sql = "UPDATE persona SET nombre=?, apellidos=?, telefono=?, estrella=?, categoriaId=? WHERE id=?";
+    $parametros = [$nombre, $apellido, $telefono, $estrella?1:0, $categoriaId, $id];
 }
 
 $sentencia = $conexionBD->prepare($sql);
