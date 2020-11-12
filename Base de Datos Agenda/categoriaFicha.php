@@ -16,9 +16,18 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
 } else { // Quieren VER la ficha de una categoría existente, cuyos datos se cargan.
     $sql = "SELECT nombre FROM categoria WHERE id=?";
 
+    $miembrosSql = "SELECT p.id AS pId, p.nombre AS pNombre, p.apellidos AS pApellidos, c.id AS cId, c.nombre AS cNombre 
+        FROM persona AS p INNER JOIN categoria AS c ON p.categoriaId = c.id
+        WHERE c.id=?
+        ORDER BY p.nombre";
+
     $select = $conexion->prepare($sql);
     $select->execute([$id]); // Se añade el parámetro a la consulta preparada.
     $rs = $select->fetchAll();
+
+    $select2 = $conexion->prepare($miembrosSql);
+    $select2->execute([$id]);
+    $rs2 = $select2->fetchAll();
 
     // Con esto, accedemos a los datos de la primera (y esperemos que única) fila que haya venido.
     $categoriaNombre = $rs[0]["nombre"];
@@ -64,16 +73,18 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
         <input type='submit' name='crear' value='Crear categoría' />
     <?php } else { ?>
         <input type='submit' name='guardar' value='Guardar cambios' />
+        <h2>Miembros</h2>
+        <?php foreach ($rs2 as $fila) { ?>
+            <ul>
+                <li><a href='personaFicha.php?id=<?=$fila["pId"]?>'><?=$fila["pNombre"] ?></a>
+                    <a href='personaFicha.php?id=<?=$fila["pId"]?>'><?=$fila["pApellidos"] ?></a>
+                    <a href='personaEliminar.php?id=<?=$fila["pId"]?>'> (X) </a></li>
+            </ul>
+        <?php } ?>
+        <a href='categoriaEliminar.php?id=<?=$id?>'>Eliminar categoría</a>
     <?php } ?>
 
 </form>
-
-<br />
-
-<a href='categoriaEliminar.php?id=<?=$id?>'>Eliminar categoría</a>
-
-<br />
-<br />
 
 <a href='categoriaListado.php'>Volver al listado de categorías.</a>
 
