@@ -91,17 +91,11 @@ $rsCategoria = $select->fetchAll();
     <?php if ($nuevaEntrada) { ?>
         <input type='submit' name='crear' value='Crear persona' />
     <?php } else { ?>
-        <input type='submit' name='guardar' value='Guardar cambios' />
+        <input type='submit' name='guardar' value='Guardar cambios' /><br><br>
+        <a href='personaEliminar.php?id=<?=$id ?>'>Eliminar persona</a>
     <?php } ?>
 
 </form>
-
-<br />
-
-<a href='personaEliminar.php?id=<?=$id?>'>Eliminar persona</a>
-
-<br />
-<br />
 
 <a href='personaListado.php'>Volver al listado de personas.</a>
 
