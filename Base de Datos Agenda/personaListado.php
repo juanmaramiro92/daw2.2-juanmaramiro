@@ -3,8 +3,17 @@ require_once "_varios.php";
 
 $conexionBD = obtenerPdoConexionBD();
 
+$favoritos = (isset($_REQUEST["favoritos"]));
+
+if ($favoritos){
+    $sqlFavoritos = "WHERE p.estrella = 1";
+} else {
+    $sqlFavoritos = "";
+}
+
 $sql = "SELECT p.id AS pId, p.nombre AS pNombre, p.apellidos AS pApellidos, p.telefono AS pTelefono, p.estrella AS pEstrella, c.id AS cId, c.nombre AS cNombre 
         FROM persona AS p INNER JOIN categoria AS c ON p.categoriaId = c.id
+        $sqlFavoritos
         ORDER BY p.nombre";
 
 $select = $conexionBD->prepare($sql);
@@ -59,6 +68,15 @@ $rs = $select->fetchAll();
 </table>
 
 <br />
+
+<?php if (!$favoritos){ ?>
+<a href='personaListado.php?favoritos'>Ver favoritos</a>
+<?php } else { ?>
+<a href='personaListado.php?'>Ver todos</a>
+<?php } ?>
+
+<br>
+<br>
 
 <a href='personaFicha.php?id=-1'>Crear entrada</a>
 
