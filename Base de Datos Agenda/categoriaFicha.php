@@ -25,9 +25,9 @@ if ($nuevaEntrada) { // Quieren CREAR una nueva entrada, así que no se cargan d
     $select->execute([$id]); // Se añade el parámetro a la consulta preparada.
     $rs = $select->fetchAll();
 
-    $select2 = $conexion->prepare($miembrosSql);
-    $select2->execute([$id]);
-    $rs2 = $select2->fetchAll();
+    $select = $conexion->prepare($miembrosSql);
+    $select->execute([$id]);
+    $rs2 = $select->fetchAll();
 
     // Con esto, accedemos a los datos de la primera (y esperemos que única) fila que haya venido.
     $categoriaNombre = $rs[0]["nombre"];

@@ -56,10 +56,12 @@ $rs = $select->fetchAll();
             <?php
             if ($fila["pEstrella"]) {
                 $urlImagen = "img/estrellaRellena.png";
+                $parametroEstrella = "estrella";
             } else {
                 $urlImagen = "img/estrellaVacia.png";
+                $parametroEstrella = "";
             }
-            echo " <td style='text-align: center'><img src='$urlImagen' width='16' height='16'></td>";
+            echo " <td style='text-align: center'><a href='personaEstablecerEstadoEstrella.php?$parametroEstrella'><img src='$urlImagen' width='16' height='16'></td>";
             ?>
             <td style='text-align: center'><a href='personaEliminar.php?id=<?=$fila["pId"]?>'> (X) </a></td>
         </tr>
