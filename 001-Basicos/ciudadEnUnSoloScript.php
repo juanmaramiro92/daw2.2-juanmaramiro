@@ -17,7 +17,7 @@
     if (!$ciudad) {
 ?>
 
-    <p>¿Cuál es tu cuidad favorita?</p>
+    <p>¿Cuál es tu ciudad favorita?</p>
     <form method='get'>
         <input type='text' name='ciudad' />
         <input type='submit' name='boton' value="Enviar" />
