@@ -3,17 +3,19 @@ require_once "_varios.php";
 
 $conexionBD = obtenerPdoConexionBD();
 
-$favoritos = (isset($_REQUEST["favoritos"]));
-
-if ($favoritos){
-    $sqlFavoritos = "WHERE p.estrella = 1";
-} else {
-    $sqlFavoritos = "";
+session_start();
+if (isset($_REQUEST["soloFavoritos"])) {
+    $_SESSION["soloFavoritos"] = true;
 }
+if (isset($_REQUEST["todos"])) {
+    unset($_SESSION["soloFavoritos"]);
+}
+
+$favoritos = isset($_SESSION["soloFavoritos"]) ? "WHERE p.estrella=1" : "";
 
 $sql = "SELECT p.id AS pId, p.nombre AS pNombre, p.apellidos AS pApellidos, p.telefono AS pTelefono, p.estrella AS pEstrella, c.id AS cId, c.nombre AS cNombre 
         FROM persona AS p INNER JOIN categoria AS c ON p.categoriaId = c.id
-        $sqlFavoritos
+        $favoritos
         ORDER BY p.nombre";
 
 $select = $conexionBD->prepare($sql);
@@ -54,14 +56,8 @@ $rs = $select->fetchAll();
             <td style='text-align: center'><a href='personaFicha.php?id=<?=$fila["pId"]?>'><?=$fila["pTelefono"] ?></a></td>
             <td style='text-align: center'><a href='categoriaFicha.php?id=<?=$fila["cId"]?>'><?=$fila["cNombre"] ?></a></td>
             <?php
-            if ($fila["pEstrella"]) {
-                $urlImagen = "img/estrellaRellena.png";
-                $parametroEstrella = "estrella";
-            } else {
-                $urlImagen = "img/estrellaVacia.png";
-                $parametroEstrella = "";
-            }
-            echo " <td style='text-align: center'><a href='personaEstablecerEstadoEstrella.php?$parametroEstrella'><img src='$urlImagen' width='16' height='16'></td>";
+            $urlImagen = $fila["pEstrella"] ? "img/estrellaRellena.png" : "img/estrellaVacia.png";
+            echo " <td style='text-align: center'><a href='personaEstablecerEstadoEstrella.php?id=$fila[pId]'><img src='$urlImagen' width='16' height='16'></a></td> ";
             ?>
             <td style='text-align: center'><a href='personaEliminar.php?id=<?=$fila["pId"]?>'> (X) </a></td>
         </tr>
@@ -71,10 +67,10 @@ $rs = $select->fetchAll();
 
 <br />
 
-<?php if (!$favoritos){ ?>
-<a href='personaListado.php?favoritos'>Ver favoritos</a>
+<?php if (!isset($_SESSION["soloFavoritos"])) {?>
+    <a href='personaListado.php?soloFavoritos'>Mostrar solo favoritos</a>
 <?php } else { ?>
-<a href='personaListado.php?'>Ver todos</a>
+    <a href='personaListado.php?todos'>Mostrar todos los contactos</a>
 <?php } ?>
 
 <br>
