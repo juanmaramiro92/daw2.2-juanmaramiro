@@ -1,7 +1,7 @@
 window.onload = inicializaciones;
 
 function inicializaciones() {
-
+    cargarTodasLasCategorias();
 }
 
 function cargarTodasLasCategorias() {
@@ -15,4 +15,24 @@ function cargarTodasLasCategorias() {
     // <td><a href='CategoriaEliminar.php?id=<?=$categoria->getId()?>'> (X)                            </a></td>
     // </tr>
     // <?php } ?>
+
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            cargarXml(this.response);
+        }
+    };
+
+    request.open("GET", "CategoriaObtenerTodas.php", true);
+    request.send();
+}
+
+function cargarXml(xml) {
+    var datos = document.getElementById("datos");
+
+    var objeto = JSON.parse(xml);
+
+    document.getElementById("datos").innerHTML = objeto.nombre;
+
 }
