@@ -2,7 +2,7 @@
 
 <head>
     <meta charset='UTF-8' />
-    <script src='js/Scripts.js' />
+    <script src='js/Scripts.js'></script>
 </head>
 
 <body>
@@ -11,17 +11,25 @@
 
 <h2 id='pantalla'>Categorías</h2>
 
+
+
+<form>
+
+    <input type='text' id='nombre' placeholder='<nombre de la categoría>' value='' />
+    <label for='nombre'>Nombre</label>
+
+    <br>
+
+    <input type='submit' id='submitCrearCategoria' value='Crear categoría' />
+
+</form>
+
+
+
 <table border='1' id='tablaCategorias'>
-
-    <div id='cabeceras'>
-        <tr>
-            <th>Nombre</th>
-        </tr>
-    </div>
-
-    <div id='datos'>
-
-    </div>
+    <tr>
+        <th>Nombre</th>
+    </tr>
 </table>
 
 </body>

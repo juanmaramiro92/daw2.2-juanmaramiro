@@ -19,7 +19,7 @@ trait Identificable
     }
 }
 
-class Categoria extends Dato
+class Categoria extends Dato implements JsonSerializable
 {
     use Identificable;
 
@@ -30,6 +30,15 @@ class Categoria extends Dato
     {
         $this->setId($id);
         $this->setNombre($nombre);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "nombre" => $this->nombre,
+            "id" => $this->id,
+        ];
+
     }
 
     public function getNombre(): string
