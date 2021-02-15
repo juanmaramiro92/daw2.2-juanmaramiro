@@ -2,11 +2,9 @@ window.onload = inicializaciones;
 var tablaCategorias;
 // TODO ¿Útil para mantener un control de eliminaciones, etc.?     var categorias;
 
-
-
 function inicializaciones() {
     tablaCategorias = document.getElementById("tablaCategorias");
-    document.getElementById('submitCrearCategoria').addEventListener('click', clickCrearCategoria)
+    document.getElementById('submitCrearCategoria').addEventListener('click', clickCrearCategoria, false);
 
     cargarTodasLasCategorias();
 }
@@ -34,6 +32,21 @@ function clickCrearCategoria() {
     // Crear un XMLHttpRequest. Enviar en la URL los datos de la categoria: CategoriaCrear.php?nombre=blablabla
     // Recoger la respuesta del request. Vendrá un objeto categoría.
     // Llamar con ese objeto a insertarCategoria(categoria);
+    var nombreCategoria = document.getElementById("nombre").value;
+
+    if(nombreCategoria != ""){
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var categoria = JSON.parse(this.responseText);
+                insertarCategoria(categoria);
+                document.getElementById("nombre").value = "";
+            }
+        };
+        request.open("GET", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
+        request.send();
+    }
 }
 
 function insertarCategoria(categoria) {
