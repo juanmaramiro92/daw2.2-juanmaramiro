@@ -107,4 +107,19 @@ class DAO
 
         return $datos;
     }
+
+    public static function categoriaEliminarPorId(int $id): bool
+    {
+        $filasAfectadas = self::ejecutarUpdate(
+            "DELETE FROM Categoria WHERE id=?",
+            [$id]
+        );
+
+        return ($filasAfectadas == 1);
+    }
+
+    public static function categoriaEliminar(Categoria $categoria): bool
+    {
+        return self::categoriaEliminarPorId($categoria->id);
+    }
 }
