@@ -2,6 +2,7 @@
 
 <head>
     <meta charset='UTF-8' />
+    <link rel="stylesheet" href="css/Estilos.css">
     <script src='js/Scripts.js'></script>
 </head>
 
@@ -9,22 +10,50 @@
 
 <h1>Súper Agenda FX</h1>
 
-<h2 id='pantalla'>Categorías</h2>
 
-<label for='nombre'>Nombre: </label>
-<input type='text' id='nombre' placeholder='Inserta un nombre' />
+
+<h2>Personas</h2>
+
+<div id="personasTabla">
+    <div id='personasCabecera'>
+        <div>
+            <div>Nombre</div>
+            <div>...</div>
+            <div>Eliminar</div>
+        </div>
+    </div>
+    <div id='personasDatos'>
+    </div>
+</div>
+
+
+
+<h2>Categorías</h2>
+
+<div id="categoriasTabla">
+    <div id='categoriasCabecera'>
+        <div>
+            <div>Nombre</div>
+            <div>Eliminar</div>
+        </div>
+    </div>
+    <div id='categoriasDatos'>
+    </div>
+</div>
+
+
+
+<br>
+
+
+
+<input type='text' id='categoriaNombre' placeholder='<nombre de la categoría>' value='' />
+<button id='btnCategoriaCrear'>Crear</button>
 
 <br><br>
 
-<input type='button' id='submitCrearCategoria' value='Crear categoría' />
+<button onclick='debug();'>Debug</button>
 
-<br><br>
-
-<table border='1' id='tablaCategorias'>
-    <tr>
-        <th>Nombre</th>
-    </tr>
-</table>
 
 </body>
 

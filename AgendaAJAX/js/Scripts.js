@@ -1,76 +1,215 @@
-window.onload = inicializaciones;
-var tablaCategorias;
-// TODO ¿Útil para mantener un control de eliminaciones, etc.?     var categorias;
 
-function inicializaciones() {
-    tablaCategorias = document.getElementById("tablaCategorias");
-    document.getElementById('submitCrearCategoria').addEventListener('click', clickCrearCategoria, false);
+// TODO Quedaría pendiente poner un timer para actualizar lo local si actualizan el servidor. Una solución óptima sería poner timestamp de modificación en la tabla y pedir categoriaObtenerModificadasDesde(timestamp), donde timestamp es la última vez que he pedido algo.
 
-    cargarTodasLasCategorias();
+
+
+window.onload = inicializar;
+
+var divCategoriasDatos;
+var inputCategoriaNombre;
+
+
+
+// ---------- VARIOS DE BASE/UTILIDADES ----------
+
+function notificarUsuario(texto) {
+    // TODO En lugar del alert, habría que añadir una línea en una zona de notificaciones, arriba, con un temporizador para que se borre solo en ¿5? segundos.
+    alert(texto);
 }
 
-function cargarTodasLasCategorias() {
+function llamadaAjax(url, parametros, manejadorOK, manejadorError) {
+    //TODO PARA DEPURACIÓN: alert("Haciendo ajax a " + url + "\nCon parámetros " + parametros);
+
     var request = new XMLHttpRequest();
 
-    request.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var categorias = JSON.parse(this.responseText);
+    request.open("POST", url);
+    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-            for (var i=0; i<categorias.length; i++) {
-                insertarCategoria(categorias[i]);
-            }
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && request.status == 200) {
+            manejadorOK(request.responseText);
+        }
+        if (manejadorError != null && request.readyState == 4 && this.status != 200) {
+            manejadorError(request.responseText);
         }
     };
 
-    request.open("GET", "CategoriaObtenerTodas.php");
-    request.send();
+    request.send(parametros);
 }
 
-function clickCrearCategoria() {
-    // Recoger datos del form.
-    // Limpiar los datos en el form: .clear()
-    // Crear un XMLHttpRequest. Enviar en la URL los datos de la categoria: CategoriaCrear.php?nombre=blablabla
-    // Recoger la respuesta del request. Vendrá un objeto categoría.
-    // Llamar con ese objeto a insertarCategoria(categoria);
-    var nombreCategoria = document.getElementById("nombre").value;
+function extraerId(texto) {
+    return texto.split('-')[1];
+}
 
-    if(nombreCategoria != ""){
-        var request = new XMLHttpRequest();
+function objetoAParametrosParaRequest(objeto) {
+    // Esto convierte un objeto JS en un listado de clave1=valor1&clave2=valor2&clave3=valor3
+    return new URLSearchParams(objeto).toString();
+}
 
-        request.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var categoria = JSON.parse(this.responseText);
-                insertarCategoria(categoria);
-                document.getElementById("nombre").value = "";
+function debug() {
+    // Esto es útil durante el desarrollo para programar el disparado de acciones concretas mediante un simple botón.
+}
+
+
+
+// ---------- MANEJADORES DE EVENTOS / COMUNICACIÓN CON PHP ----------
+
+function inicializar() {
+    divCategoriasDatos = document.getElementById("categoriasDatos");
+    inputCategoriaNombre = document.getElementById("categoriaNombre");
+
+    document.getElementById('btnCategoriaCrear').addEventListener('click', clickCategoriaCrear);
+
+    llamadaAjax("CategoriaObtenerTodas.php", "",
+        function(texto) {
+            var categorias = JSON.parse(texto);
+
+            for (var i=0; i<categorias.length; i++) {
+                // No se fuerza la ordenación, ya que PHP nos habrá dado los elementos en orden correcto y sería una pérdida de tiempo.
+                domCategoriaInsertar(categorias[i], false);
             }
-        };
-        request.open("GET", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
-        request.send();
+        }
+    );
+}
+
+function clickCategoriaCrear() {
+    inputCategoriaNombre.disabled = true;
+
+    llamadaAjax("CategoriaCrear.php", "nombre=" + inputCategoriaNombre.value,
+        function(texto) {
+            // Se re-crean los datos por si han modificado/normalizado algún valor en el servidor.
+            var categoria = JSON.parse(texto);
+
+            // Se fuerza la ordenación, ya que este elemento podría no quedar ordenado si se pone al final.
+            domCategoriaInsertar(categoria, true);
+
+            inputCategoriaNombre.value = "";
+            inputCategoriaNombre.disabled = false;
+        },
+        function(texto) {
+            notificarUsuario("Error Ajax al crear: " + texto);
+            inputCategoriaNombre.disabled = false;
+        }
+    );
+}
+
+function blurCategoriaModificar(input) {
+    let divCategoria = input.parentElement.parentElement;
+    let id = extraerId(divCategoria.id);
+    let nombre = input.value;
+
+    let categoria = { "id":  id, "nombre": nombre};
+
+    llamadaAjax("CategoriaActualizar.php", objetoAParametrosParaRequest(categoria),
+        function(texto) {
+            if (texto != "null") {
+                // Se re-crean los datos por si han modificado/normalizado algún valor en el servidor.
+                categoria = JSON.parse(texto);
+                domCategoriaModificar(categoria);
+            } else {
+                alert("Error Ajax al modificar: " + texto);
+            }
+        },
+        function(texto) {
+            alert("Error Ajax al modificar: " + texto);
+        }
+    );
+}
+
+function clickCategoriaEliminar(id) {
+    llamadaAjax("CategoriaEliminar.php", "id="+id,
+        function(texto) {
+            var categoria = JSON.parse(texto);
+            domCategoriaEliminar(id);
+        },
+        function(texto) {
+            alert("Error Ajax al eliminar: " + texto);
+        }
+    );
+}
+
+
+
+// ---------- GESTIÓN DEL DOM ----------
+
+function domCategoriaCrearDiv(categoria) {
+    let nombreInput = document.createElement("input");
+    nombreInput.setAttribute("type", "text");
+    nombreInput.setAttribute("value", categoria.nombre);
+    nombreInput.setAttribute("onblur", "blurCategoriaModificar(this); return false;");
+    let nombreDiv = document.createElement("div");
+    nombreDiv.appendChild(nombreInput);
+
+    let eliminarImg = document.createElement("img");
+    eliminarImg.setAttribute("src", "img/Eliminar.png");
+    eliminarImg.setAttribute("onclick", "clickCategoriaEliminar(" + categoria.id + "); return false;");
+    let eliminarDiv = document.createElement("div");
+    eliminarDiv.appendChild(eliminarImg);
+
+    let divCategoria = document.createElement("div");
+    divCategoria.setAttribute("id", "categoria-" + categoria.id);
+    divCategoria.appendChild(nombreDiv);
+    divCategoria.appendChild(eliminarDiv);
+
+    return divCategoria;
+}
+
+function domCategoriaObtenerDiv(pos) {
+    let div = divCategoriasDatos.children[pos];
+    return div;
+}
+
+function domCategoriaObtenerObjeto(pos) {
+    let divCategoria = domCategoriaObtenerDiv(pos);
+    let divNombre = divCategoria.children[0];
+    let input = divNombre.children[0];
+
+    return { "id":  extraerId(divCategoria.id), "nombre": input.value}; // Devolvemos un objeto recién creado con los datos que hemos obtenido.
+}
+
+function domCategoriaEjecutarInsercion(pos, categoria) {
+    let divReferencia = domCategoriaObtenerDiv(pos);
+    let divNuevo = domCategoriaCrearDiv(categoria);
+
+    divCategoriasDatos.insertBefore(divNuevo, divReferencia);
+}
+
+function domCategoriaInsertar(categoriaNueva, enOrden=false) {
+    // Si piden insertar en orden, se buscará su lugar. Si no, irá al final.
+    if (enOrden) {
+        for (let pos = 0; pos < divCategoriasDatos.children.length; pos++) {
+            let categoriaActual = domCategoriaObtenerObjeto(pos);
+
+            if (categoriaNueva.nombre.localeCompare(categoriaActual.nombre) == -1) {
+                // Si la categoría nueva va ANTES que la actual, este es el punto en el que insertarla.
+                domCategoriaEjecutarInsercion(pos, categoriaNueva);
+                return;
+            }
+        }
     }
+
+    domCategoriaEjecutarInsercion(divCategoriasDatos.children.length, categoriaNueva);
 }
 
-function insertarCategoria(categoria) {
-    // TODO Que la categoría se inserte en el lugar que le corresponda según un orden alfabético.
-    // Usar esto: https://www.w3schools.com/jsref/met_node_insertbefore.asp
+function domCategoriaLocalizarPosicion(id) {
+    var trs = divCategoriasDatos.children;
 
-    var tr = document.createElement("tr");
-    var td = document.createElement("td");
-    var a = document.createElement("a");
-    a.setAttribute("href","CategoriaFicha.php?id=" + categoria.id);
-    var textoContenido = document.createTextNode(categoria.nombre);
+    for (var pos=0; pos < divCategoriasDatos.children.length; pos++) {
+        let categoriaActual = domCategoriaObtenerObjeto(pos);
 
-    a.appendChild(textoContenido);
-    td.appendChild(a);
-    tr.appendChild(td);
-    tablaCategorias.appendChild(tr);
+        if (categoriaActual.id == id) return (pos);
+    }
+
+    return -1;
 }
 
-function eliminarCategoria(id) {
-    // TODO Pendiente de hacer.
+function domCategoriaEliminar(id) {
+    domCategoriaObtenerDiv(domCategoriaLocalizarPosicion(id)).remove();
 }
 
-function modificarCategoria(categoria) {
-    // TODO Pendiente de hacer.
-}
+function domCategoriaModificar(categoria) {
+    domCategoriaEliminar(categoria.id);
 
-// TODO Actualizar lo local si actualizan el servidor. Poner timestamp de modificación en la tabla y pedir categoriaObtenerModificadasDesde(timestamp)
+    // Se fuerza la ordenación, ya que este elemento podría no quedar ordenado si se pone al final.
+    domCategoriaInsertar(categoria, true);
+}

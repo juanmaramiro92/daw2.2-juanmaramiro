@@ -39,6 +39,10 @@ class Categoria extends Dato implements JsonSerializable
             "id" => $this->id,
         ];
 
+        // Esto sería lo mismo:
+        //$array["nombre"] = $this->nombre;
+        //$array["id"] = $this->id;
+        //return $array;
     }
 
     public function getNombre(): string

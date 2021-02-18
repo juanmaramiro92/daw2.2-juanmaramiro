@@ -75,7 +75,7 @@
                     echo "</a>";
                 ?>
             </td>
-            <td><a href= 'CategoriaFicha.php?id=<?=$fila["cId"]?>'> <?= $fila["cNombre"] ?> </a></td>
+            <td><a href= 'zzCategoriaFicha.php?id=<?=$fila["cId"]?>'> <?= $fila["cNombre"] ?> </a></td>
             <td><a href='PersonaEliminar.php?id=<?=$fila["pId"]?>'> (X)                      </a></td>
         </tr>
     <?php } ?>
