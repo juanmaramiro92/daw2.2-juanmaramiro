@@ -59,7 +59,7 @@ function inicializar() {
     inputCategoriaNombre = document.getElementById("categoriaNombre");
 
     document.getElementById('btnCategoriaCrear').addEventListener('click', clickCategoriaCrear);
-    document.getElementById('btnPersonaCrear').addEventListener('click', clickCategoriaCrear);
+    //document.getElementById('btnPersonaCrear').addEventListener('click', clickPersonaCrear);
 
     llamadaAjax("CategoriaObtenerTodas.php", "",
         function(texto) {
