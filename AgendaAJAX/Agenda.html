@@ -1,7 +1,12 @@
 <html>
 
 <head>
+<<<<<<< HEAD
     <meta charset='UTF-8'>
+=======
+    <meta charset='UTF-8' />
+    <link rel="stylesheet" href="css/Estilos.css">
+>>>>>>> master
     <script src='js/Scripts.js'></script>
 </head>
 
@@ -9,19 +14,61 @@
 
 <h1>Súper Agenda FX</h1>
 
-<h2 id='pantalla'>Categorías</h2>
 
-<table border='1' id='tablaCategorias'>
 
-    <div id='cabeceras'>
-        <tr>
-            <th>Nombre</th>
-        </tr>
+<h2>Personas</h2>
+
+<div id="personasTabla">
+    <div id='personasCabecera'>
+        <div>
+            <div>Nombre</div>
+            <div>Apellidos</div>
+            <div>Telefono</div>
+            <div>Eliminar</div>
+        </div>
     </div>
+    <div id='personasDatos'>
+    </div>
+<<<<<<< HEAD
     <tr>
         <td><div id='datos'></div></td>
     </tr>
 </table>
+=======
+</div>
+<br>
+<input type='text' id='personaNombre' placeholder='Inserte el nombre' value='' /><br>
+<input type='text' id='personaApellidos' placeholder='Inserte los apellidos' value='' /><br>
+<input type='text' id='personaTelefono' placeholder='Inserte el nº de teléfono' value='' />
+<button id='btnPersonaCrear'>Crear</button>
+
+<h2>Categorías</h2>
+
+<div id="categoriasTabla">
+    <div id='categoriasCabecera'>
+        <div>
+            <div>Nombre</div>
+            <div>Eliminar</div>
+        </div>
+    </div>
+    <div id='categoriasDatos'>
+    </div>
+</div>
+
+
+
+<br>
+
+
+
+<input type='text' id='categoriaNombre' placeholder='<nombre de la categoría>' value='' />
+<button id='btnCategoriaCrear'>Crear</button>
+
+<br><br>
+
+<button onclick='debug();'>Debug</button>
+
+>>>>>>> master
 
 </body>
 
