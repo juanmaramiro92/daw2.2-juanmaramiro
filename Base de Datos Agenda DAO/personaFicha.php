@@ -1,41 +1,13 @@
-<?php
-require_once "_varios.php";
 
-$conexion = obtenerPdoConexionBD();
+<?php
+
+require_once "_com/_varios.php";
+require_once "_com/DAO.php";
 
 $id = (int)$_REQUEST["id"];
-
-$nuevaEntrada = ($id == -1);
-
-if ($nuevaEntrada) {
-    $personaNombre = "";
-    $personaApellido = "";
-    $personaTelefono = "";
-    $personaEstrella = false;
-    $personaCategoriaId = 0;
-} else {
-    $sqlPersona = "SELECT * FROM persona WHERE id=?";
-
-    $select = $conexion->prepare($sqlPersona);
-    $select->execute([$id]);
-    $rsPersona = $select->fetchAll();
-
-    $personaNombre = $rsPersona[0]["nombre"];
-    $personaApellido = $rsPersona[0]["apellidos"];
-    $personaTelefono = $rsPersona[0]["telefono"];
-    $personaEstrella = ($rsPersona[0]["estrella"] == 1);
-    $personaCategoriaId = $rsPersona[0]["categoriaId"];
-
-}
-
-$sqlCategoria = "SELECT * FROM categoria ORDER BY nombre";
-$select = $conexion->prepare($sqlCategoria);
-$select->execute([]);
-$rsCategoria = $select->fetchAll();
+$datos= DAO::personaFicha($id);
 
 ?>
-
-
 
 <html>
 
@@ -43,11 +15,9 @@ $rsCategoria = $select->fetchAll();
     <meta charset='UTF-8'>
 </head>
 
-
-
 <body>
 
-<?php if ($nuevaEntrada) { ?>
+<?php if ($datos[0] == true) { ?>
     <h1>Nueva ficha de persona</h1>
 <?php } else { ?>
     <h1>Ficha de persona</h1>
@@ -55,44 +25,44 @@ $rsCategoria = $select->fetchAll();
 
 <form method='post' action='personaGuardar.php'>
 
-    <input type='hidden' name='id' value='<?=$id?>' />
+    <input type='hidden' name='id' value='<?= $id ?>' />
 
-    <label for='nombre'>Nombre: </label>
-    <input type='text' name='nombre' value='<?=$personaNombre?>' /><br>
+    <label for='nombre'>Nombre</label>
+    <input type='text' name='nombre' value='<?=$datos[1]?>' />
+    <br/>
 
-    <label for='apellidos'> Apellidos: </label>
-    <input type='text' name='apellidos' value='<?=$personaApellido?>' /><br>
+    <label for='apellidos'> Apellidos</label>
+    <input type='text' name='apellidos' value='<?=$datos[2]?>' />
+    <br/>
 
-    <label for='telefono'> Teléfono: </label>
-    <input type='text' name='telefono' value='<?=$personaTelefono?>' /><br>
+    <label for='telefono'> Teléfono</label>
+    <input type='text' name='telefono' value='<?=$datos[3]?>' />
+    <br/>
 
-    <label for='pep'>Categoría: </label>
+    <label for='categoriaId'>Categoría</label>
+    <select name='categoriaId'>
+        <?php
+        foreach ($datos[6] as $categoria) {
+            $categoriaId = $categoria->getId();
+            $categoriaNombre = $categoria->getNombre();
+            if($categoriaId == $datos[4]) $seleccion = "selected='true'";
+            else $seleccion = "";
+            echo "<option value='$categoriaId' $seleccion>$categoriaNombre</option>";
+        }
+        ?>
+    </select>
+    <br/>
 
-        <select name='categoriaId'>
-            <?php
-            foreach ($rsCategoria as $filaCategoria) {
-                $categoriaId = (int) $filaCategoria["id"];
-                $categoriaNombre = $filaCategoria["nombre"];
+    <label for='estrella'>Estrella</label>
+    <input type='checkbox' name='estrella' <?= $datos[5] ? "checked" : "" ?> />
+    <br/>
 
-                if ($filaCategoria["id"] == $personaCategoriaId) { ?>
-                    <option value='<?=$categoriaId?>' selected><?=$categoriaNombre?></option>
-                <?php
-                } else {?>
-                    <option value='<?=$categoriaId?>'><?=$categoriaNombre?></option>
-                <?php
-                }
-            }
-            ?>
-        </select><br>
+    <br/>
 
-    <label for='estrella'>Favorito: </label>
-    <input type='checkbox' name='estrella' <?= $personaEstrella ? "checked" : "" ?> /><br><br>
-
-    <?php if ($nuevaEntrada) { ?>
+    <?php if ($datos[0]) { ?>
         <input type='submit' name='crear' value='Crear persona' />
     <?php } else { ?>
-        <input type='submit' name='guardar' value='Guardar cambios' /><br><br>
-        <a href='personaEliminar.php?id=<?=$id ?>'>Eliminar persona</a>
+        <input type='submit' name='guardar' value='Guardar cambios' />
     <?php } ?>
 
 </form>

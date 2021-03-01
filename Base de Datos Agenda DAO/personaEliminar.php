@@ -1,22 +1,10 @@
 <?php
-require_once "_varios.php";
-
-$conexionBD = obtenerPdoConexionBD();
+require_once "_com/DAO.php";
 
 $id = (int)$_REQUEST["id"];
 
-$sql = "DELETE FROM persona WHERE id=?";
-
-$sentencia = $conexionBD->prepare($sql);
-$sqlConExito = $sentencia->execute([$id]);
-
-$correctoNormal = ($sqlConExito && $sentencia->rowCount() == 1);
-
-$noExistia = ($sqlConExito && $sentencia->rowCount() == 0);
-
+$correcto= DAO::eliminarPersonaPorId($id);
 ?>
-
-
 
 <html>
 
@@ -24,24 +12,16 @@ $noExistia = ($sqlConExito && $sentencia->rowCount() == 0);
     <meta charset='UTF-8'>
 </head>
 
-
-
 <body>
 
-<?php if ($correctoNormal) { ?>
+<?php if ($correcto) { ?>
 
     <h1>Eliminación completada</h1>
     <p>Se ha eliminado correctamente la persona.</p>
 
-<?php } else if ($noExistia) { ?>
-
-    <h1>Eliminación no realizada</h1>
-    <p>No existe la persona que se pretende eliminar (quizá la eliminaron en paralelo o, ¿ha manipulado Vd. el parámetro id?).</p>
-
 <?php } else { ?>
 
-    <h1>Error en la eliminación</h1>
-    <p>No se ha podido eliminar la persona.</p>
+    <h1>Error en la eliminación.</h1>
 
 <?php } ?>
 
