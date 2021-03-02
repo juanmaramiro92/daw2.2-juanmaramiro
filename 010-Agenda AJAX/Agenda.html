@@ -1,48 +1,24 @@
 <html>
 
 <head>
-<<<<<<< HEAD
-    <meta charset='UTF-8'>
-=======
     <meta charset='UTF-8' />
+    <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="css/Estilos.css">
->>>>>>> master
     <script src='js/Scripts.js'></script>
 </head>
 
 <body>
 
-<h1>Súper Agenda FX</h1>
-
-
-
-<h2>Personas</h2>
-
-<div id="personasTabla">
-    <div id='personasCabecera'>
-        <div>
-            <div>Nombre</div>
-            <div>Apellidos</div>
-            <div>Telefono</div>
-            <div>Eliminar</div>
-        </div>
-    </div>
-    <div id='personasDatos'>
-    </div>
-<<<<<<< HEAD
-    <tr>
-        <td><div id='datos'></div></td>
-    </tr>
-</table>
-=======
-</div>
-<br>
-<input type='text' id='personaNombre' placeholder='Inserte el nombre' value='' /><br>
-<input type='text' id='personaApellidos' placeholder='Inserte los apellidos' value='' /><br>
-<input type='text' id='personaTelefono' placeholder='Inserte el nº de teléfono' value='' />
-<button id='btnPersonaCrear'>Crear</button>
+<h1>Agenda AJAX</h1>
 
 <h2>Categorías</h2>
+
+<fieldset id="campoCategoria">
+<input type='text' id='categoriaNombre' placeholder='Categoria' value='' />
+<input type="button" id='btnCategoriaCrear' value="Crear categoría" />
+</fieldset>
+
+<br>
 
 <div id="categoriasTabla">
     <div id='categoriasCabecera'>
@@ -55,20 +31,38 @@
     </div>
 </div>
 
+<h2>Personas</h2>
 
+<fieldset id="campoPersona">
+<input type='text' id='personaNombre' placeholder='Nombre' value='' />
+<input type='text' id='personaApellidos' placeholder='Apellidos' value='' /><br>
+<input type='text' id='personaTelefono' placeholder='Teléfono' value='' />
+<input type='text' id='personaCategoriaId' placeholder='Categoría Id' value='' /><br>
+<input type="button" id='btnPersonaCrear' value="Crear persona" />
+</fieldset>
+
+<br>
+
+<div id="personasTabla">
+    <div id='personasCabecera'>
+        <div>
+            <div>Nombre</div>
+            <div>Apellidos</div>
+            <div>Teléfono</div>
+            <div>Categoría</div>
+            <div>Estrella</div>
+            <div>Eliminar</div>
+        </div>
+    </div>
+    <div id='personasDatos'>
+    </div>
+</div>
 
 <br>
 
 
 
-<input type='text' id='categoriaNombre' placeholder='<nombre de la categoría>' value='' />
-<button id='btnCategoriaCrear'>Crear</button>
 
-<br><br>
-
-<button onclick='debug();'>Debug</button>
-
->>>>>>> master
 
 </body>
 

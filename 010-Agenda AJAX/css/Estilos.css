@@ -1,6 +1,13 @@
+/* Categorías */
+
+#categoriasCabecera {
+    background: #FFAD58;
+    font-weight: bold;
+}
+
 #categoriasTabla > div {
     display: table;
-    width: 250px;
+    width: 290px;
 }
 
 #categoriasTabla > div > div {
@@ -11,7 +18,7 @@
 #categoriasTabla > div > div > div {
     display: table-cell;
     text-align: center;
-    border: 1px solid silver;
+    border: 1px solid #DE9448;
     width: 50%;
     padding: 1px;
 }
@@ -21,9 +28,45 @@
     border: none;
 }
 
+#campoCategoria {
+    width: 260px;
+    background: #FFAD58;
+    border: 2px solid #DE9448;
+}
+
+#btnCategoriaCrear {
+    width: 110px;
+    height: 21px;
+    background: #FFAD58;
+    border: 1px solid #DE9448;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+#btnCategoriaCrear:hover {
+    width: 110px;
+    height: 21px;
+    background: #DE9448;
+    border: 1px solid #DE9448;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+#categoriaNombre {
+    width: 145px;
+    margin-top: 5px;
+}
+
+/* Personas */
+
+#personasCabecera {
+    background: #73EEC5;
+    font-weight: bold;
+}
+
 #personasTabla > div {
     display: table;
-    width: 250px;
+    width: 780px;
 }
 
 #personasTabla > div > div {
@@ -34,12 +77,44 @@
 #personasTabla > div > div > div {
     display: table-cell;
     text-align: center;
-    border: 1px solid silver;
-    width: 50%;
-    padding: 1px;
+    border: 1px solid #50AD8E;
+    width: 16.67%;
+    padding: 2px;
 }
 
 #personasTabla > div > div > div > input {
     width: 100%;
     border: none;
+}
+
+#campoPersona {
+    width: 260px;
+    background: #73EEC5;
+    border: 2px solid #50AD8E;
+}
+
+#btnPersonaCrear {
+    width: 358px;
+    background: #73EEC5;
+    border: 1px solid #50AD8E;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+#btnPersonaCrear:hover {
+    width: 358px;
+    background: #50AD8E;
+    border: 1px solid #50AD8E;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+#personaNombre,
+#personaApellidos {
+    margin-top: 6px;
+}
+
+#personaTelefono,
+#personaCategoriaId {
+    margin: 3px 0px 5px;
 }

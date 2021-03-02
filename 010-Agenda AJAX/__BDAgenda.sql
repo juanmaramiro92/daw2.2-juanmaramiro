@@ -65,8 +65,7 @@ INSERT INTO `Persona` (`id`, `nombre`, `apellidos`, `telefono`, `estrella`, `cat
 (4, 'Cristina', 'Muñoz', '644999444', 1, 8),
 (5, 'Laura', 'García', '666777888', 1, 2),
 (6, 'Menganito', 'Mengánez', '699888777', 0, 3),
-(13, 'Felipe', 'Fernández Ferrero', '684698462', 1, 3),
-(14, 'Tupac', NULL, '69696969', 0, 1);
+(13, 'Felipe', 'Fernández Ferrero', '684698462', 1, 3);
 
 --
 -- Índices para tablas volcadas

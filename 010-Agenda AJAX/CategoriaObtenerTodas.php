@@ -2,4 +2,6 @@
 
 require_once "_com/DAO.php";
 
-echo json_encode(DAO::categoriaObtenerTodas());
+$resultado = DAO::categoriaObtenerTodas();
+
+echo json_encode($resultado);
