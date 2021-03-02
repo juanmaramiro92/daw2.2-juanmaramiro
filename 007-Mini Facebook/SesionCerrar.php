@@ -2,8 +2,8 @@
 
     require_once "_Varios.php";
 
-    cerrarSesionRamYCookie();
+    destruirSesionRamYCookie();
 
-    redireccionar("ContenidoPublico1.php");
+    redireccionar("SesionInicioFormulario.php");
 
 ?>

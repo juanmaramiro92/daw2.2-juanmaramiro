@@ -1,16 +1,14 @@
 <?php
     require_once "_Varios.php";
 
-    if (haySesionIniciada()){
-        redireccionar("ContenidoPrivado1.php");
-    }
+    if (haySesionRamIniciada()) redireccionar("ContenidoPrivado1.php");
 
     $datosErroneos = isset($_REQUEST["datosErroneos"]);
 ?>
 
 
 
-<html lang="es-ES">
+<html>
 
 <head>
     <meta charset='UTF-8'>
@@ -32,6 +30,9 @@
 
     <label for='contrasenna'>Contraseña</label>
     <input type='password' name='contrasenna' id='contrasenna'><br><br>
+
+    <label for='recordar'>Recuérdame aunque cierre el navegador</label>
+    <input type='checkbox' name='recordar' id='recordar'><br><br>
 
     <input type='submit' value='Iniciar Sesión'>
 </form>

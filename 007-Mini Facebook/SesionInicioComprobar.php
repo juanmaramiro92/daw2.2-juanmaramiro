@@ -2,10 +2,15 @@
 
 require_once "_Varios.php";
 
-$arrayUsuario = obtenerUsuario($_REQUEST["identificador"], $_REQUEST["contrasenna"]);
+$arrayUsuario = obtenerUsuarioPorContrasenna($_REQUEST["identificador"], $_REQUEST["contrasenna"]);
 
-if ($arrayUsuario) {
-    marcarSesionComoIniciada($arrayUsuario);
+if ($arrayUsuario) { // Identificador existía y contraseña era correcta.
+    establecerSesionRam($arrayUsuario);
+
+    if (isset($_REQUEST["recordar"])) {
+        establecerSesionCookie($arrayUsuario);
+    }
+
     redireccionar("ContenidoPrivado1.php");
 } else {
     redireccionar("SesionInicioFormulario.php?datosErroneos");

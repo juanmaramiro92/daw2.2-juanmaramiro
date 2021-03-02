@@ -6,7 +6,7 @@
 
 
 
-<html lang="es-ES">
+<html>
 
 <head>
     <meta charset='UTF-8'>

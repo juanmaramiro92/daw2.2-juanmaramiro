@@ -2,7 +2,12 @@
 
     require_once "_Varios.php";
 
-    if (!haySesionIniciada()) {
+    // Comprobamos si hay sesión-usuario iniciada.
+    //   - Si la hay, no intervenimos. Dejamos que la pág se cargue.
+    //     (Mostrar info del usuario logueado y tal...)
+    //   - Si NO la hay, redirigimos a SesionInicioFormulario.php
+
+    if (!haySesionRamIniciada()) {
         redireccionar("SesionInicioFormulario.php");
     }
 
@@ -10,7 +15,7 @@
 
 
 
-<html lang="es-ES">
+<html>
 
 <head>
     <meta charset='UTF-8'>
